@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Class Voting</title>
+  <link rel="stylesheet" href="voting.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Class Voting System</h1>
+  <p class="subtitle">You are allowed to vote only once</p>
+
+  <!-- CATEGORY 1 -->
+  <div class="vote-section">
+    <h2>Course Representative</h2>
+
+    <div class="candidates">
+      <label class="card">
+        <input type="radio" name="rep" value="Alice">
+        <img src="male picture1.jpg" alt="Alice">
+        <span>Daniel Brown</span>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="rep" value="Brian">
+        <img src="male picture 2.jpg" alt="Brian">
+        <span>Brian Smith</span>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="rep" value="Cynthia">
+        <img src="male image3.jpg" alt="Cynthia">
+        <span>Felix White</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- CATEGORY 2 -->
+  <div class="vote-section">
+    <h2>Assistance Course Representative</h2>
+
+    <div class="candidates">
+      <label class="card">
+        <input type="radio" name="social" value="Daniel">
+        <img src="female image1.avif" alt="Daniel">
+        <span>Alice Johnson</span>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="social" value="Esther">
+        <img src="female image2.jpeg" alt="Esther">
+        <span>Esther Green</span>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="social" value="Felix">
+        <img src="female image3.avif" alt="Felix">
+        <span>Cynthia John </span>
+      </label>
+    </div>
+  </div>
+
+  <button type="button" onclick="submitVote()">Submit Vote</button>
+
+ <!-- <button onclick="submitVote()"><a href="confirmation.html">Submit Vote</a></button>-->
+</div>
+
+<script src="voting.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Vote</title>
+<style>
+body { font-family: Arial; background:#020617; color:white; }
+.container { max-width:500px; margin:80px auto; text-align:center; }
+.candidate {
+  background:#1e293b;
+  padding:20px;
+  margin:15px 0;
+  border-radius:10px;
+  cursor:pointer;
+}
+.candidate:hover { background:#334155; }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>Choose Your Candidate</h2>
+
+<div class="candidate" onclick="vote('Candidate A')">
+Candidate A – President
+</div>
+
+<div class="candidate" onclick="vote('Candidate B')">
+Candidate B – President
+</div>
+</div>
+
+<script>
+let user = JSON.parse(localStorage.getItem("currentUser"));
+if(!user) location.href = "login.html";
+
+function vote(name){
+  let votes = JSON.parse(localStorage.getItem("votes")) || {};
+  votes[name] = (votes[name] || 0) + 1;
+
+  let users = JSON.parse(localStorage.getItem("users"));
+  users = users.map(u =>
+    u.matric === user.matric ? { ...u, voted:true } : u
+  );
+
+  localStorage.setItem("votes", JSON.stringify(votes));
+  localStorage.setItem("users", JSON.stringify(users));
+  localStorage.removeItem("currentUser");
+
+  location.href = "success.html";
+}
+</script>
+</body>
+</html>

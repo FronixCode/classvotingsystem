@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Class Voting Portal</title>
+
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 230px;
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  background: #334155;
+  color: white;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sidebar button:hover {
+  background: #475569;
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  background: #f1f5f9;
+  padding: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* FORMS */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+}
+
+.primary {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.primary:hover {
+  background: #1d4ed8;
+}
+
+/* CANDIDATES */
+.candidate {
+  background: white;
+  padding: 15px;
+  margin: 15px 0;
+  border-left: 5px solid #2563eb;
+}
+
+.status {
+  font-weight: bold;
+  margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Voting Portal</h2>
+  <button onclick="showSection('register')">Register</button>
+  <button onclick="showSection('login')">Login</button>
+  <button onclick="showSection('dashboard')">Dashboard</button>
+  <button onclick="showSection('results')">Results</button>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<!-- MAIN AREA -->
+<div class="main">
+
+  <!-- REGISTER -->
+  <div id="register">
+    <h3>Student Registration</h3>
+    <input id="rName" placeholder="Full Name">
+    <input id="rMatric" placeholder="Matric Number">
+    <input id="rPassword" type="password" placeholder="Password">
+    <button class="primary" onclick="register()">Register</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="login" class="hidden">
+    <h3>Student Login</h3>
+    <input id="lMatric" placeholder="Matric Number">
+    <input id="lPassword" type="password" placeholder="Password">
+    <button class="primary" onclick="login()">Login</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="hidden">
+    <h3>Student Dashboard</h3>
+    <p><b>Name:</b> <span id="uName"></span></p>
+    <p><b>Matric:</b> <span id="uMatric"></span></p>
+
+    <h4>Vote for Class Representative</h4>
+
+    <div class="candidate">
+      <p><b>Candidate A</b></p>
+      <button class="primary" onclick="vote('Candidate A')">Vote</button>
+    </div>
+
+    <div class="candidate">
+      <p><b>Candidate B</b></p>
+      <button class="primary" onclick="vote('Candidate B')">Vote</button>
+    </div>
+
+    <p class="status" id="msg"></p>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results" class="hidden">
+    <h3>Election Results</h3>
+    <p>Candidate A: <span id="resA">0</span></p>
+    <p>Candidate B: <span id="resB">0</span></p>
+  </div>
+
+</div>
+
+<script>
+let users = JSON.parse(localStorage.getItem("users")) || [];
+let votes = JSON.parse(localStorage.getItem("votes")) || {};
+let currentUser = null;
+
+function showSection(section) {
+  document.getElementById("register").classList.add("hidden");
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("results").classList.add("hidden");
+  document.getElementById(section).classList.remove("hidden");
+}
+
+function register() {
+  if (!rName.value || !rMatric.value || !rPassword.value) {
+    alert("All fields required");
+    return;
+  }
+
+  if (users.find(u => u.matric === rMatric.value)) {
+    alert("Matric already registered");
+    return;
+  }
+
+  users.push({
+    name: rName.value,
+    matric: rMatric.value,
+    password: rPassword.value,
+    voted: false
+  });
+
+  localStorage.setItem("users", JSON.stringify(users));
+  alert("Registration successful");
+}
+
+function login() {
+  let user = users.find(
+    u => u.matric === lMatric.value && u.password === lPassword.value
+  );
+
+  if (!user) {
+    alert("Invalid login details");
+    return;
+  }
+
+  currentUser = user;
+  uName.innerText = user.name;
+  uMatric.innerText = user.matric;
+
+  showSection("dashboard");
+}
+
+function vote(candidate) {
+  if (currentUser.voted) {
+    msg.innerText = "You have already voted!";
+    msg.style.color = "red";
+    return;
+  }
+
+  votes[candidate] = (votes[candidate] || 0) + 1;
+  currentUser.voted = true;
+
+  localStorage.setItem("votes", JSON.stringify(votes));
+  localStorage.setItem("users", JSON.stringify(users));
+
+  msg.innerText = "Vote submitted successfully ✔";
+  msg.style.color = "green";
+}
+
+function logout() {
+  currentUser = null;
+  alert("Logged out");
+  showSection("login");
+}
+
+function updateResults() {
+  resA.innerText = votes["Candidate A"] || 0;
+  resB.innerText = votes["Candidate B"] || 0;
+}
+
+document.getElementById("results").addEventListener("click", updateResults);
+</script>
+
+</body>
+</html>
+
